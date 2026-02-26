@@ -29,6 +29,53 @@ A customer management system based on React + Ant Design, supporting CRUD operat
 - Vite
 - Day.js
 
+## Cheapest Deployment (OSS/Static Hosting + GitHub Public Data Repo)
+
+To minimize cost, you can deploy this app as a static site (Aliyun OSS / GitHub Pages / Cloudflare Pages etc),
+and store data in a **separate GitHub public repository** as JSON files.
+
+### How it works
+
+- **Audit page** reads JSON via GitHub raw URL (no login required, repo must be public)
+- **Accountant** edits data in UI and writes JSON back to GitHub using a **GitHub Token (PAT)**
+- This avoids paying for ECS / database
+
+### Create a GitHub public repo for data
+
+Example repo structure:
+
+- `data/payments.json`
+- `data/clockins.json`
+
+The app will create these files on first write (if not exists).
+
+### Configure data source (recommended)
+
+Option A: configure at build time via env variables:
+
+- `VITE_DATA_REPO_OWNER`
+- `VITE_DATA_REPO_NAME`
+- `VITE_DATA_REPO_BRANCH` (default: `main`)
+- `VITE_DATA_PAYMENTS_PATH` (default: `data/payments.json`)
+- `VITE_DATA_CLOCKINS_PATH` (default: `data/clockins.json`)
+
+Option B: open UI page `/data-source` and save config in browser localStorage (per device).
+
+### Accountant login (write permission)
+
+Open `/login` and paste a **Fine-grained PAT** with minimal permission:
+
+- Repository access: only the data repo
+- Permissions: **Contents: Read and write**
+
+## Optional: All-in-one Server via Docker Compose (more cost, real DB)
+
+If you still want a single server deployment (web + api + postgres), see previous Docker setup in this repo:
+
+- `docker-compose.yml`
+- `Dockerfile.web`
+- `server/`
+
 ## Install Dependencies
 
 ```bash
